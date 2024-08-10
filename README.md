@@ -46,19 +46,7 @@ BEGIN
     IF dbName IS NOT NULL AND dbName != '' THEN
         -- Query to retrieve index information
         SELECT
-            TABLE_NAME,
-            INDEX_NAME,
-            NON_UNIQUE,
-            SEQ_IN_INDEX,
-            COLUMN_NAME,
-            COLLATION,
-            CARDINALITY,
-            SUB_PART,
-            PACKED,
-            NULLABLE,
-            INDEX_TYPE,
-            COMMENT,
-            INDEX_COMMENT
+            *
         FROM
             INFORMATION_SCHEMA.STATISTICS
         WHERE
@@ -75,12 +63,17 @@ DELIMITER ;
 >Query
 >CALL GetAllIndexesINDB('explore');
 
+>DROP  PROCEDURE GetAllIndexesINDB;
+
 Create a temporary table to do more analysis on indexing
 CREATE TABLE MY_INDEXS (
-    TABLE_NAME VARCHAR(255) NOT NULL,
-    INDEX_NAME VARCHAR(255) NOT NULL,
-    NON_UNIQUE TINYINT NOT NULL,
-    SEQ_IN_INDEX INT NOT NULL,
+    TABLE_CATALOG VARCHAR(255),
+    TABLE_SCHEMA VARCHAR(255),
+    TABLE_NAME VARCHAR(255),
+    NON_UNIQUE TINYINT,
+    INDEX_SCHEMA VARCHAR(255),
+    INDEX_NAME VARCHAR(255),
+    SEQ_IN_INDEX INT,
     COLUMN_NAME VARCHAR(255),
     COLLATION CHAR(1),
     CARDINALITY INT,
@@ -89,7 +82,9 @@ CREATE TABLE MY_INDEXS (
     NULLABLE VARCHAR(3),
     INDEX_TYPE VARCHAR(16),
     COMMENT VARCHAR(255),
-    INDEX_COMMENT VARCHAR(255)
+    INDEX_COMMENT VARCHAR(255),
+    IS_VISIBLE VARCHAR(3),
+    EXPRESSION TEXT
 );
 
 > SELECT DISTINCT INDEX_TYPE FROM MY_INDEXS;
